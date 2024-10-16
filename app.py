@@ -1,27 +1,31 @@
 import numpy as np
 from flask import Flask, request, jsonify, render_template
+from flask_ngrok import run_with_ngrok
 import pickle
 
+
 app = Flask(__name__)
-model = pickle.load(open('model.pkl', 'rb'))
+model = pickle.load(open('/content/drive/My Drive/linearregression.pkl','rb'))
+run_with_ngrok(app)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
 
-@app.route('/predict',methods=['POST'])
+    return render_template("index.html")
+
+@app.route('/predict',methods=['GET'])
 def predict():
+
+
     '''
     For rendering results on HTML GUI
     '''
-    int_features = [int(x) for x in request.form.values()]
-    final_features = [np.array(int_features)]
-    prediction = model.predict(final_features)
+    exp = float(request.args.get('exp'))
 
-    output = round(prediction[0], 2)
-
-    return render_template('index.html', prediction_text='Employee Salary for given age: {} years is Rs. {}'.format( int_features, output))
+    prediction = model.predict([[exp]])
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    return render_template('index.html', prediction_text='Regression Model  has predicted salary for given experinace is : {}'.format(prediction))
+
+
+app.run()
