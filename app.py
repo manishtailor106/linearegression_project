@@ -5,7 +5,7 @@ import pickle
 
 
 app = Flask(__name__)
-model = pickle.load(open('/content/drive/My Drive/linearregression.pkl','rb'))
+model = pickle.load(open('/content/drive/My Drive/model.pkl','rb'))
 run_with_ngrok(app)
 
 @app.route('/')
